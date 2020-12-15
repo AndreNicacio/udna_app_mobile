@@ -1,0 +1,293 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "amplify-udna-backend-prd-143138-authRole",
+			"UnauthRoleArn": "arn:aws:iam::959706618901:role/amplify-udna-backend-prd-143138-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::959706618901:role/amplify-udna-backend-prd-143138-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "amplify-udna-backend-prd-143138-deployment",
+			"UnauthRoleName": "amplify-udna-backend-prd-143138-unauthRole",
+			"StackName": "amplify-udna-backend-prd-143138",
+			"StackId": "arn:aws:cloudformation:us-east-1:959706618901:stack/amplify-udna-backend-prd-143138/9d6d0680-5cb7-11ea-aebd-0ab389d40b93",
+			"AmplifyAppId": "d10kjjujvbuc43"
+		},
+		"categories": {
+			"auth": {
+				"udnabackendbe02c040": {},
+				"userPoolGroups": {}
+			},
+			"function": {
+				"buyExamBillet": {},
+				"buyExamCreditCard": {},
+				"getExams": {},
+				"udnabackendbe02c040": {},
+				"udnaBackend": {},
+				"AdminQueriesa746e85c": {}
+			}
+		}
+	},
+	"auth": {
+		"udnabackendbe02c040": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"output": {
+				"AppClientSecret": "kfafumtcjd4e1ubcnopc6tkvrh7v9vcekl1tt0o4e38urbvb08n",
+				"UserPoolId": "us-east-1_vG7F1qnOM",
+				"AppClientIDWeb": "4o2lknetb5bnl8uocu1304edoo",
+				"AppClientID": "5vblri8lr7b09q50gnjldtt5dn",
+				"IdentityPoolId": "us-east-1:73edf8dc-12ee-4b7f-aa9f-10207b2d9a21",
+				"IdentityPoolName": "udnabackendbe02c040_identitypool_be02c040__prd",
+				"UserPoolName": "udnabackendbe02c040_userpool_be02c040"
+			},
+			"lastPushTimeStamp": "2020-07-14T01:03:38.587Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-udna-backend-prd-143138-deployment/amplify-cfn-templates/auth/udnabackendbe02c040-cloudformation-template.yml",
+				"logicalId": "authudnabackendbe02c040"
+			}
+		},
+		"userPoolGroups": {
+			"service": "Cognito-UserPool-Groups",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "udnabackendbe02c040",
+					"attributes": [
+						"UserPoolId",
+						"AppClientIDWeb",
+						"AppClientID",
+						"IdentityPoolId"
+					]
+				}
+			],
+			"output": {
+				"backofficeGroupRole": "arn:aws:iam::959706618901:role/us-east-1_vG7F1qnOM-backofficeGroupRole"
+			},
+			"lastPushTimeStamp": "2020-07-14T01:03:38.588Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-udna-backend-prd-143138-deployment/amplify-cfn-templates/auth/template.json",
+				"logicalId": "authuserPoolGroups"
+			}
+		}
+	},
+	"api": {
+		"udnaBackend": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [],
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
+						"userPoolConfig": {
+							"userPoolId": "authudnabackendbe02c040"
+						}
+					}
+				},
+				"GraphQLAPIIdOutput": "3tn77dv2gbag7ibwijizdpc7sa",
+				"GraphQLAPIEndpointOutput": "https://2sqfkbscznbzzadb2fusoq6jj4.appsync-api.us-east-1.amazonaws.com/graphql"
+			},
+			"lastPushTimeStamp": "2020-07-14T01:03:39.221Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-udna-backend-prd-143138-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+				"logicalId": "apiudnaBackend"
+			},
+			"lastPushDirHash": "7q01kd/VXDsnnk0So5xwtrN6fZs="
+		},
+		"AdminQueries": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "udnabackendbe02c040",
+					"attributes": [
+						"UserPoolId"
+					]
+				},
+				{
+					"category": "function",
+					"resourceName": "AdminQueriesa746e85c",
+					"attributes": [
+						"Arn",
+						"Name"
+					]
+				}
+			],
+			"output": {
+				"ApiName": "AdminQueries",
+				"RootUrl": "https://1u81d8ilm5.execute-api.us-east-1.amazonaws.com/prd"
+			},
+			"lastPushTimeStamp": "2020-07-14T01:03:38.589Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-udna-backend-prd-143138-deployment/amplify-cfn-templates/api/admin-queries-cloudformation-template.json",
+				"logicalId": "apiAdminQueries"
+			}
+		}
+	},
+	"function": {
+		"buyExamBillet": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "udnabackendbe02c040",
+					"attributes": [
+						"UserPoolId"
+					]
+				},
+				{
+					"category": "api",
+					"resourceName": "udnaBackend",
+					"attributes": [
+						"GraphQLAPIIdOutput",
+						"GraphQLAPIEndpointOutput"
+					]
+				}
+			],
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:959706618901:function:buyExamBillet-prd",
+				"Name": "buyExamBillet-prd",
+				"LambdaExecutionRole": "udnabackendLambdaRoled66026c8-prd"
+			},
+			"lastPushTimeStamp": "2020-07-14T01:03:39.221Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-udna-backend-prd-143138-deployment/amplify-cfn-templates/function/buyExamBillet-cloudformation-template.json",
+				"logicalId": "functionbuyExamBillet"
+			},
+			"lastBuildTimeStamp": "2020-07-14T00:57:51.571Z",
+			"lastPackageTimeStamp": "2020-07-14T00:57:52.332Z",
+			"distZipFilename": "buyExamBillet-6c6e584272536a567732-build.zip",
+			"lastPushDirHash": "O2qU5Spngt1y+b5QFws6zGBlYNk="
+		},
+		"buyExamCreditCard": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "udnabackendbe02c040",
+					"attributes": [
+						"UserPoolId"
+					]
+				},
+				{
+					"category": "api",
+					"resourceName": "udnaBackend",
+					"attributes": [
+						"GraphQLAPIIdOutput",
+						"GraphQLAPIEndpointOutput"
+					]
+				},
+				{
+					"category": "function",
+					"resourceName": "buyExamBillet",
+					"attributes": [
+						"Name"
+					]
+				}
+			],
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:959706618901:function:buyExamCreditCard-prd",
+				"Name": "buyExamCreditCard-prd",
+				"LambdaExecutionRole": "udnabackendLambdaRole6277e3fd-prd"
+			},
+			"lastPushTimeStamp": "2020-07-14T01:03:39.221Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-udna-backend-prd-143138-deployment/amplify-cfn-templates/function/buyExamCreditCard-cloudformation-template.json",
+				"logicalId": "functionbuyExamCreditCard"
+			},
+			"lastBuildTimeStamp": "2020-07-14T00:57:51.577Z",
+			"lastPackageTimeStamp": "2020-07-14T00:57:52.299Z",
+			"distZipFilename": "buyExamCreditCard-516f6d2b4f4b58636c78-build.zip",
+			"lastPushDirHash": "3UJyybjwBEgwgBABiO3EWE5x6yQ="
+		},
+		"getExams": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "udnabackendbe02c040",
+					"attributes": [
+						"UserPoolId"
+					]
+				},
+				{
+					"category": "api",
+					"resourceName": "udnaBackend",
+					"attributes": [
+						"GraphQLAPIIdOutput",
+						"GraphQLAPIEndpointOutput"
+					]
+				}
+			],
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:959706618901:function:getExams-prd",
+				"Name": "getExams-prd",
+				"LambdaExecutionRole": "udnabackendLambdaRole957b913a-prd"
+			},
+			"lastPushTimeStamp": "2020-07-14T01:03:39.221Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-udna-backend-prd-143138-deployment/amplify-cfn-templates/function/getExams-cloudformation-template.json",
+				"logicalId": "functiongetExams"
+			},
+			"lastBuildTimeStamp": "2020-07-14T00:57:51.577Z",
+			"lastPackageTimeStamp": "2020-07-14T00:57:52.368Z",
+			"distZipFilename": "getExams-65766c6f68574d556c32-build.zip",
+			"lastPushDirHash": "v7IukVooqUsuxFvpn4GG5CaHYDs="
+		},
+		"AdminQueriesa746e85c": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "udnabackendbe02c040",
+					"attributes": [
+						"UserPoolId"
+					]
+				}
+			],
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:959706618901:function:AdminQueriesa746e85c-prd",
+				"Name": "AdminQueriesa746e85c-prd",
+				"LambdaExecutionRole": "AdminQueriesa746e85cLambdaRole-prd"
+			},
+			"lastPushTimeStamp": "2020-07-14T01:03:39.221Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-udna-backend-prd-143138-deployment/amplify-cfn-templates/function/AdminQueriesa746e85c-cloudformation-template.json",
+				"logicalId": "functionAdminQueriesa746e85c"
+			},
+			"lastBuildTimeStamp": "2020-07-14T00:57:51.578Z",
+			"lastPackageTimeStamp": "2020-07-14T00:57:55.985Z",
+			"distZipFilename": "AdminQueriesa746e85c-3772573847497871435a-build.zip",
+			"lastPushDirHash": "Yn/sGKSyhY3GVPe8k5eVQ+2EEh4="
+		}
+	},
+	"storage": {
+		"udnas3": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"BucketName": "udnas3prd-prd",
+				"Region": "us-east-1"
+			},
+			"lastPushTimeStamp": "2020-07-14T01:03:38.592Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-udna-backend-prd-143138-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+				"logicalId": "storageudnas3"
+			}
+		}
+	}
+}

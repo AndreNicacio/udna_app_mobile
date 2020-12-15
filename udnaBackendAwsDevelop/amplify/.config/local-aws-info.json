@@ -1,0 +1,12 @@
+{
+    "dev": {
+        "configLevel": "project",
+        "useProfile": true,
+        "profileName": "default"
+    },
+    "prd": {
+        "configLevel": "project",
+        "useProfile": true,
+        "profileName": "default"
+    }
+}

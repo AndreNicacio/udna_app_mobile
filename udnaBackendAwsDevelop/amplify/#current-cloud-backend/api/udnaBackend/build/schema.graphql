@@ -1,0 +1,506 @@
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  cellphone: String!
+  cpf: String!
+  restoreId: String
+  address: Address
+  nutritionalProfile: Boolean
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+type Address {
+  id: ID!
+  zipCode: String!
+  street: String!
+  number: String!
+  complement: String
+  neighborhood: String!
+  city: String!
+  stateInitials: String!
+  stateName: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+type Mutation {
+  buyExamBillet(user: UserInfo, exam: ExamInfo): Billet
+  buyExamCreditCard(user: UserInfo, exam: ExamInfo, card: CreditCardInfo): String
+  createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User
+  updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User
+  deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User
+  createAddress(input: CreateAddressInput!, condition: ModelAddressConditionInput): Address
+  updateAddress(input: UpdateAddressInput!, condition: ModelAddressConditionInput): Address
+  deleteAddress(input: DeleteAddressInput!, condition: ModelAddressConditionInput): Address
+  createCategory(input: CreateCategoryInput!, condition: ModelCategoryConditionInput): Category
+  updateCategory(input: UpdateCategoryInput!, condition: ModelCategoryConditionInput): Category
+  deleteCategory(input: DeleteCategoryInput!, condition: ModelCategoryConditionInput): Category
+  createExam(input: CreateExamInput!, condition: ModelExamConditionInput): Exam
+  updateExam(input: UpdateExamInput!, condition: ModelExamConditionInput): Exam
+  deleteExam(input: DeleteExamInput!, condition: ModelExamConditionInput): Exam
+  createKit(input: CreateKitInput!, condition: ModelKitConditionInput): Kit
+  updateKit(input: UpdateKitInput!, condition: ModelKitConditionInput): Kit
+  deleteKit(input: DeleteKitInput!, condition: ModelKitConditionInput): Kit
+}
+
+type Billet {
+  barCode: String!
+  url: String!
+}
+
+input UserInfo {
+  cpf: String!
+  name: String!
+  email: String!
+  cellphone: String!
+}
+
+input ExamInfo {
+  id: String!
+  title: String!
+  price: String!
+}
+
+input CreditCardInfo {
+  number: String!
+  cvc: String!
+  expiry: String!
+  name: String!
+  installments: Int!
+}
+
+type Category {
+  id: ID!
+  type: Int
+  name: String!
+  exams(filter: ModelExamFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelExamConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Exam {
+  id: ID!
+  categoryId: ID!
+  title: String!
+  subtitle: String!
+  description: String!
+  price: String!
+  url: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Query {
+  getExams(username: String): [ExamData]
+  getUser(id: ID!): User
+  listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection
+  getAddress(id: ID!): Address
+  listAddresss(filter: ModelAddressFilterInput, limit: Int, nextToken: String): ModelAddressConnection
+  getCategory(id: ID!): Category
+  listCategorys(id: ID, filter: ModelCategoryFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelCategoryConnection
+  getExam(id: ID!): Exam
+  listExams(filter: ModelExamFilterInput, limit: Int, nextToken: String): ModelExamConnection
+  getKit(id: ID!): Kit
+  listKits(filter: ModelKitFilterInput, limit: Int, nextToken: String): ModelKitConnection
+}
+
+type ExamData {
+  id: String!
+  examId: String!
+  title: String!
+  price: String!
+  status: ExamStatus!
+  date: String!
+}
+
+type ExamStatus {
+  text: String!
+  color: String!
+}
+
+type Kit {
+  id: ID!
+  categoryId: String!
+  examId: String!
+  owner: String
+  status: Status!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum Status {
+  ACTIVATE
+  INSTOCK
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelUserConnection {
+  items: [User]
+  nextToken: String
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+input ModelUserFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  email: ModelStringInput
+  cellphone: ModelStringInput
+  cpf: ModelStringInput
+  restoreId: ModelStringInput
+  nutritionalProfile: ModelBooleanInput
+  and: [ModelUserFilterInput]
+  or: [ModelUserFilterInput]
+  not: ModelUserFilterInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+input CreateUserInput {
+  id: ID
+  name: String!
+  email: String!
+  cellphone: String!
+  cpf: String!
+  restoreId: String
+  nutritionalProfile: Boolean
+}
+
+input UpdateUserInput {
+  id: ID!
+  name: String
+  email: String
+  cellphone: String
+  cpf: String
+  restoreId: String
+  nutritionalProfile: Boolean
+}
+
+input DeleteUserInput {
+  id: ID
+}
+
+input ModelUserConditionInput {
+  name: ModelStringInput
+  email: ModelStringInput
+  cellphone: ModelStringInput
+  cpf: ModelStringInput
+  restoreId: ModelStringInput
+  nutritionalProfile: ModelBooleanInput
+  and: [ModelUserConditionInput]
+  or: [ModelUserConditionInput]
+  not: ModelUserConditionInput
+}
+
+type Subscription {
+  onCreateUser(owner: String): User @aws_subscribe(mutations: ["createUser"])
+  onUpdateUser(owner: String): User @aws_subscribe(mutations: ["updateUser"])
+  onDeleteUser(owner: String): User @aws_subscribe(mutations: ["deleteUser"])
+  onCreateAddress(owner: String): Address @aws_subscribe(mutations: ["createAddress"])
+  onUpdateAddress(owner: String): Address @aws_subscribe(mutations: ["updateAddress"])
+  onDeleteAddress(owner: String): Address @aws_subscribe(mutations: ["deleteAddress"])
+  onCreateCategory: Category @aws_subscribe(mutations: ["createCategory"])
+  onUpdateCategory: Category @aws_subscribe(mutations: ["updateCategory"])
+  onDeleteCategory: Category @aws_subscribe(mutations: ["deleteCategory"])
+  onCreateExam: Exam @aws_subscribe(mutations: ["createExam"])
+  onUpdateExam: Exam @aws_subscribe(mutations: ["updateExam"])
+  onDeleteExam: Exam @aws_subscribe(mutations: ["deleteExam"])
+  onCreateKit: Kit @aws_subscribe(mutations: ["createKit"])
+  onUpdateKit: Kit @aws_subscribe(mutations: ["updateKit"])
+  onDeleteKit: Kit @aws_subscribe(mutations: ["deleteKit"])
+}
+
+type ModelAddressConnection {
+  items: [Address]
+  nextToken: String
+}
+
+input ModelAddressFilterInput {
+  id: ModelIDInput
+  zipCode: ModelStringInput
+  street: ModelStringInput
+  number: ModelStringInput
+  complement: ModelStringInput
+  neighborhood: ModelStringInput
+  city: ModelStringInput
+  stateInitials: ModelStringInput
+  stateName: ModelStringInput
+  and: [ModelAddressFilterInput]
+  or: [ModelAddressFilterInput]
+  not: ModelAddressFilterInput
+}
+
+input CreateAddressInput {
+  id: ID
+  zipCode: String!
+  street: String!
+  number: String!
+  complement: String
+  neighborhood: String!
+  city: String!
+  stateInitials: String!
+  stateName: String!
+}
+
+input UpdateAddressInput {
+  id: ID!
+  zipCode: String
+  street: String
+  number: String
+  complement: String
+  neighborhood: String
+  city: String
+  stateInitials: String
+  stateName: String
+}
+
+input DeleteAddressInput {
+  id: ID
+}
+
+input ModelAddressConditionInput {
+  zipCode: ModelStringInput
+  street: ModelStringInput
+  number: ModelStringInput
+  complement: ModelStringInput
+  neighborhood: ModelStringInput
+  city: ModelStringInput
+  stateInitials: ModelStringInput
+  stateName: ModelStringInput
+  and: [ModelAddressConditionInput]
+  or: [ModelAddressConditionInput]
+  not: ModelAddressConditionInput
+}
+
+type ModelCategoryConnection {
+  items: [Category]
+  nextToken: String
+}
+
+input ModelCategoryFilterInput {
+  id: ModelIDInput
+  type: ModelIntInput
+  name: ModelStringInput
+  and: [ModelCategoryFilterInput]
+  or: [ModelCategoryFilterInput]
+  not: ModelCategoryFilterInput
+}
+
+input CreateCategoryInput {
+  id: ID
+  type: Int
+  name: String!
+}
+
+input UpdateCategoryInput {
+  id: ID!
+  type: Int
+  name: String
+}
+
+input DeleteCategoryInput {
+  id: ID!
+}
+
+input ModelCategoryConditionInput {
+  type: ModelIntInput
+  name: ModelStringInput
+  and: [ModelCategoryConditionInput]
+  or: [ModelCategoryConditionInput]
+  not: ModelCategoryConditionInput
+}
+
+type ModelExamConnection {
+  items: [Exam]
+  nextToken: String
+}
+
+input ModelExamFilterInput {
+  id: ModelIDInput
+  categoryId: ModelIDInput
+  title: ModelStringInput
+  subtitle: ModelStringInput
+  description: ModelStringInput
+  price: ModelStringInput
+  url: ModelStringInput
+  and: [ModelExamFilterInput]
+  or: [ModelExamFilterInput]
+  not: ModelExamFilterInput
+}
+
+input CreateExamInput {
+  id: ID
+  categoryId: ID!
+  title: String!
+  subtitle: String!
+  description: String!
+  price: String!
+  url: String
+}
+
+input UpdateExamInput {
+  id: ID!
+  categoryId: ID
+  title: String
+  subtitle: String
+  description: String
+  price: String
+  url: String
+}
+
+input DeleteExamInput {
+  id: ID
+}
+
+input ModelExamConditionInput {
+  categoryId: ModelIDInput
+  title: ModelStringInput
+  subtitle: ModelStringInput
+  description: ModelStringInput
+  price: ModelStringInput
+  url: ModelStringInput
+  and: [ModelExamConditionInput]
+  or: [ModelExamConditionInput]
+  not: ModelExamConditionInput
+}
+
+type ModelKitConnection {
+  items: [Kit]
+  nextToken: String
+}
+
+input ModelStatusInput {
+  eq: Status
+  ne: Status
+}
+
+input ModelKitFilterInput {
+  id: ModelIDInput
+  categoryId: ModelStringInput
+  examId: ModelStringInput
+  owner: ModelStringInput
+  status: ModelStatusInput
+  and: [ModelKitFilterInput]
+  or: [ModelKitFilterInput]
+  not: ModelKitFilterInput
+}
+
+input CreateKitInput {
+  id: ID
+  categoryId: String!
+  examId: String!
+  owner: String
+  status: Status!
+}
+
+input UpdateKitInput {
+  id: ID!
+  categoryId: String
+  examId: String
+  owner: String
+  status: Status
+}
+
+input DeleteKitInput {
+  id: ID
+}
+
+input ModelKitConditionInput {
+  categoryId: ModelStringInput
+  examId: ModelStringInput
+  owner: ModelStringInput
+  status: ModelStatusInput
+  and: [ModelKitConditionInput]
+  or: [ModelKitConditionInput]
+  not: ModelKitConditionInput
+}
